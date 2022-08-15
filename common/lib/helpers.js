@@ -1,4 +1,4 @@
-const isSingleFileContract = (sourceCode: string) => {
+const isSingleFileContract = (sourceCode) => {
   return (
     sourceCode.indexOf("pragma") === 0 ||
     sourceCode.indexOf("//") === 0 ||
@@ -7,25 +7,21 @@ const isSingleFileContract = (sourceCode: string) => {
   );
 };
 
-const isSymbolObject = (network: string) => {
+const isSymbolObject = (network) => {
   return network.indexOf("bsc") >= 0;
 };
 
-const parseSourceCodeObject = (sourceCode: any, network: string) => {
-  console.log("HERE")
-  //if (isSymbolObject(network)) return JSON.parse(sourceCode);
-  const res = JSON.parse(sourceCode.substr(1, sourceCode.length - 2));
-  console.log(res);
-  return res;
+const parseSourceCodeObject = (sourceCode, network) => {
+  if (isSymbolObject(network)) return JSON.parse(sourceCode);
+  return JSON.parse(sourceCode.substr(1, sourceCode.length - 2));
 };
 
-const getSourcesObject = (parsedSourceCode: any, network: string) => {
-  console.log(parsedSourceCode);
-  //if (isSymbolObject(network)) return Object.entries(parsedSourceCode);
+const getSourcesObject = (parsedSourceCode, network) => {
+  if (isSymbolObject(network)) return Object.entries(parsedSourceCode);
   return Object.entries(parsedSourceCode.sources);
 };
 
-export const getContractContentList = (sourceCodes: any, network: string) => {
+const getContractContentList = (sourceCodes, network) => {
   const contractContent = [];
   // is array?
   for (const sourceCode of sourceCodes) {
@@ -40,20 +36,24 @@ export const getContractContentList = (sourceCodes: any, network: string) => {
         network
       );
       const sourceObjects = getSourcesObject(parsedSourceCode, network).map(
-        (sourceObject: any) => {
+        (sourceObject) => {
           return {
             path: sourceObject[0],
             content: sourceObject[1].content,
           };
         }
       );
-      console.log(sourceObjects);
       contractContent.push(...sourceObjects);
     }
   }
   return contractContent;
 };
 
-export const copyToClipboard = (data: string) => {
+const copyToClipboard = (data) => {
   navigator.clipboard.writeText(data);
 };
+
+module.exports = {
+  copyToClipboard,
+  getContractContentList
+}

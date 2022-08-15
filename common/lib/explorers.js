@@ -1,6 +1,6 @@
-import axios from "axios";
+const axios = require("axios");
 
-export const NETWORKS = [
+const NETWORKS = [
   { id: "ethmain", label: "Ethereum Mainnet", site: "https://etherscan.io/" },
   {
     id: "rinkeby",
@@ -36,12 +36,12 @@ export const NETWORKS = [
   },
 ];
 
-export const getContractSourceCode = async (
-  apiKey: string,
-  network: string,
-  contractAddress: string
+const getContractSourceCode = async (
+  apiKey,
+  network,
+  contractAddress
 ) => {
-  const networkRequests: any = {
+  const networkRequests = {
     ethmain: `https://api.etherscan.io/api?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}`,
     rinkeby: `https://api-rinkeby.etherscan.io/api?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}`,
     ropsten: `https://api-ropsten.etherscan.io/api?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}`,
@@ -55,10 +55,10 @@ export const getContractSourceCode = async (
   return await axios.get(networkRequests[network]);
 };
 
-export const getApiKeyByNetwork = (network: string) => {
+const getApiKeyByNetwork = (network) => {
   let apiKey;
   switch (network) {
-    case "ethmain":
+    case "eth":
       apiKey = process.env.APP_APIKEY_ETHERSCAN;
       break;
     case "rinkeby":
@@ -90,4 +90,10 @@ export const getApiKeyByNetwork = (network: string) => {
       break;
   }
   return apiKey;
+};
+
+module.exports = {
+  NETWORKS,
+  getContractSourceCode,
+  getApiKeyByNetwork
 };

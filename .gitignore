@@ -9,3 +9,7 @@ typechain-types
 cache
 artifacts
 
+.DS_Store
+slither.json
+contract_**
+contracts/**
