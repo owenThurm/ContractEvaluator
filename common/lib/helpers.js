@@ -12,13 +12,21 @@ const isSymbolObject = (network) => {
 };
 
 const parseSourceCodeObject = (sourceCode, network) => {
-  if (isSymbolObject(network)) return JSON.parse(sourceCode);
-  return JSON.parse(sourceCode.substr(1, sourceCode.length - 2));
+  try {
+    if (isSymbolObject(network)) return JSON.parse(sourceCode);
+    return JSON.parse(sourceCode.substr(1, sourceCode.length - 2));
+  } catch {
+    return JSON.parse(sourceCode.substr(1, sourceCode.length - 2));
+  }
 };
 
 const getSourcesObject = (parsedSourceCode, network) => {
-  if (isSymbolObject(network)) return Object.entries(parsedSourceCode);
-  return Object.entries(parsedSourceCode.sources);
+  //if (isSymbolObject(network)) return Object.entries(parsedSourceCode);
+  try {
+    return Object.entries(parsedSourceCode.sources);
+  } catch {
+    return Object.entries(parsedSourceCode);
+  }
 };
 
 const getContractContentList = (sourceCodes, network) => {
